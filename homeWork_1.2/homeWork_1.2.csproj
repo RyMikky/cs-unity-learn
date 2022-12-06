@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>CSharp_learn</RootNamespace>
+    <RootNamespace>homeWork_1._2</RootNamespace>
   </PropertyGroup>
 
 </Project>
