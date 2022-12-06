@@ -12,17 +12,18 @@ namespace homeWork_1._3._1
         static void Main(string[] args)
         {
             Puzzle puz = new Puzzle("SmartPUZZLE",
-                "Самый умный пазл из всех умных пазлов, аще!", 2002, "запредельная", 18);
+                "Самый умный пазл из всех умных пазлов, аще!", 2002, 
+                "запредельная", 18, true, @"http:://www.puzzel-ladder.ashe");
             puz.Message();
 
             RPG rpg = new RPG("Dibla",
                 "Классическо-динамическая, олдово-ньюфажная экшон-RPG", 2011,
-                "можно грабить корованы и стать главой Сунтаурия", 12);
+                "можно грабить корованы и стать главой Сунтаурия", 12, true);
             rpg.Message();
 
             Shooter sho = new Shooter("DackHanter",
                 "Подстрели как можно больше уток мясистых уток!", 1992,
-                "стебущаяся над твоими промахами псина присутствует", 6);
+                "стебущаяся над твоими промахами псина присутствует", 6, ShooterType.RetroGame);
             sho.AddDependency("Световой пистолет");
             sho.AddDependency("Пузатый ламповый ЭЛТ-телек");
             sho.Message();
@@ -37,6 +38,11 @@ namespace homeWork_1._3._1
             strata.Message();
         }
 
+        internal enum ShooterType
+        {
+            FirstPerson, ThirdPerson, RetroGame
+        }
+
         public class Puzzle
         {
             private string _Name;            // Название продукта
@@ -44,6 +50,8 @@ namespace homeWork_1._3._1
             private int _Year;               // Год выпуска продукта
             private string _Difficulty;      // Сложность продукта
             private int _RARS;               // Возрастная классификация информационной продукции (Russian Age Rating System, RARS)
+            public bool _HasOnlineLadder;    // Есть ли у игры таблица онлайн рейтинга
+            public string _webLadderURL;     // Адрес страницы в интернете с онлайн рейтингом
 
             public Puzzle(string name, int year, string difficulty, int rARS)
             {
@@ -53,17 +61,23 @@ namespace homeWork_1._3._1
                 _RARS = rARS;
             }
 
-            public Puzzle(string name, string description, int year, string difficulty, int rARS)
+            public Puzzle(string name, string description, int year, string difficulty, int rARS, bool ladder, string web)
                 : this(name, year, difficulty, rARS)
             {
                 _Description = description;
+                _HasOnlineLadder = ladder;
+                _webLadderURL = web;
             }
 
             public void Message()
             {
                 Console.WriteLine($"Игра-пазл: \"{_Name}\", выпущенная в {_Year}");
                 Console.WriteLine(_Description);
-                Console.WriteLine($"Сложность игры: \"{_Difficulty}\", возрастное ограничение {_RARS}+ \n");
+                Console.WriteLine($"Сложность игры: \"{_Difficulty}\", возрастное ограничение {_RARS}+");
+                if (_HasOnlineLadder)
+                {
+                    Console.WriteLine($"Таблица лучших игроков расположенна по адресу: \"{_webLadderURL}\"\n");
+                }
             }
         }
 
@@ -74,19 +88,30 @@ namespace homeWork_1._3._1
             private int _Year;               // Год выпуска продукта
             private string _Feature;         // Особенность продукта
             private int _RARS;               // Возрастная классификация информационной продукции (Russian Age Rating System, RARS)
+            public bool _IsActionRPG;        // Флаг ActionRPG
 
-            public RPG(string name, string description, int year, string feature, int rARS)
+            public RPG(string name, string description, int year, string feature, int rARS, bool action)
             {
                 _Name = name;
                 _Description = description;
                 _Year = year;
                 _Feature = feature;
                 _RARS = rARS;
+                _IsActionRPG = action;
             }
 
             public void Message()
             {
-                Console.WriteLine($"Ролевая игра: \"{_Name}\", выпущенная в {_Year}");
+                if (_IsActionRPG)
+                {
+                    Console.Write($"ActionRPG: \"{_Name}\"");
+                }
+                else
+                {
+                    Console.Write($"Ролевая игра: \"{_Name}\"");
+                }
+
+                Console.Write($", выпущенная в {_Year}\n");
                 Console.WriteLine(_Description);
                 Console.WriteLine($"Особенность игры: \"{_Feature}\"");
                 Console.WriteLine($"Возрастное ограничение {_RARS}+ \n");
@@ -101,15 +126,18 @@ namespace homeWork_1._3._1
             private string _Feature;            // Особенность продукта
             private int _RARS;                  // Возрастная классификация
 
-            private List<string> _Dependency = new List<string>();   // Зависимости продукта
+            protected List<string> _Dependency = new List<string>();   // Зависимости продукта
 
-            public Shooter(string name, string description, int year, string feature, int rARS)
+            internal ShooterType _gameType;     // тип шутера, например находится в доп файле Commons.cs
+
+            public Shooter(string name, string description, int year, string feature, int rARS, ShooterType type)
             {
                 _Name = name;
                 _Description = description;
                 _Year = year;
                 _Feature = feature;
                 _RARS = rARS;
+                _gameType = type;
             }
 
             public void AddDependency(string dependency)
@@ -156,7 +184,8 @@ namespace homeWork_1._3._1
             private int _Year;               // Год выпуска продукта
             private int _RARS;               // Возрастная классификация информационной продукции (Russian Age Rating System, RARS)
 
-            private string[] _TeamSize = new string[] { "3 на 3", "5 на 5" };   // размеры команд
+            public int _HeroesCount;         // Количество героев
+            public string[] _TeamSize = new string[] { "3 на 3", "5 на 5" };   // размеры команд
 
             public MOBA(string name, string description, int year, int rARS)
             {
@@ -166,11 +195,18 @@ namespace homeWork_1._3._1
                 _RARS = rARS;
             }
 
+            public MOBA(string name, string description, int year, int rARS, int heroes) 
+                : this(name, description, year, rARS)
+            {
+                _HeroesCount = heroes;
+            }
+
             public void Message()
             {
                 Console.WriteLine($"Очередная МОВА: \"{_Name}\", выпущенная в {_Year}");
                 Console.WriteLine(_Description);
                 Console.WriteLine($"Размеры команд: \"{_TeamSize[0]}\" и \"{_TeamSize[1]}\"");
+                Console.WriteLine($"Доступно: \"{_HeroesCount}\" уникальных персонажей");
                 Console.WriteLine($"Возрастное ограничение {_RARS}+ \n");
             }
         }
@@ -183,8 +219,8 @@ namespace homeWork_1._3._1
             private string _Feature;         // Особенность продукта
             private int _RARS;               // Возрастная классификация информационной продукции (Russian Age Rating System, RARS)
 
-            private string[] _GameType = new string[] { "Синглплеер", "Мультиплеер" };                  // режимы игры
-            private string[] _Races = new string[] { "Человечки", "Космодервиши", "Насикомые" };       // играбельные расы
+            public string[] _GameType = new string[] { "Синглплеер", "Мультиплеер" };                  // режимы игры
+            public string[] _Races = new string[] { "Человечки", "Космодервиши", "Насикомые" };        // играбельные расы
 
             public Strategy(string name, string description, int year, string feature, int rARS)
             {
