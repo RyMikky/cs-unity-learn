@@ -81,9 +81,4 @@ namespace MyMath
             Console.WriteLine($"Result _3D_Vector with coords {{ {_x}, {_y}, {_z} }} \n");
         }
     }
-
-    //public void Add_3D_Vector(ref _3D_Vector lhs, ref _3D_Vector rhs)
-    //{
-
-    //}
 }
