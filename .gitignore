@@ -362,3 +362,11 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Lecture_1.5
+/homeWork_1.6/Library
+/homeWork_1.6/Assets/Textures
+/homeWork_1.6/Assets/Scenes
+/homeWork_1.6/ProjectSettings
+/homeWork_1.6/UserSettings
+/homeWork_1.6/Temp
+/homeWork_1.6/homeWork_1.6.sln
+/homeWork_1.6/.vsconfig
